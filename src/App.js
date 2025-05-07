@@ -31,18 +31,30 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Tableau de bord environnemental</h1>
+        <div className="dashboard">
+          <Gauge
+            src="/wellbeing.png"
+            alt="Jauge bien être"
+            label="Jauge bien être"
+            value={wellbeing}
+            onChange={setWellbeing}
+          />
+          <Gauge
+            src="/biodiversity.png"
+            alt="Jauge biodiversité"
+            label="Jauge biodiversité"
+            value={biodiversity}
+            onChange={setBiodiversity}
+          />
+          <Gauge
+            src="/landuse.png"
+            alt="Taux d’occupation du sol"
+            label="Taux d’occupation du sol"
+            value={landUse}
+            onChange={setLandUse}
+          />
+        </div>
       </header>
     </div>
   );
