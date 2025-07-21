@@ -25,8 +25,8 @@ export default function JaugesPage() {
         />
         <Gauge
           src="/landuse.png"
-          alt="Occupation du sol"
-          label="Occupation du sol"
+          alt="Artificialisation"
+          label="Artificialisation"
           value={landUse}
           onChange={setLandUse}
         />

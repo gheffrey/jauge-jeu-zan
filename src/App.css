@@ -1,210 +1,126 @@
-body, html, .App {
-  margin: 0;
-  padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  height: 100%;
-  background-color: #f5f7fa;
-}
-
-.topbar {
+/* Barre de progression à étapes */
+.progress-bar-container {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: #2c3e50;
-  padding: 10px 20px;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0;
 }
 
-.logo-container img.logo {
-  height: 90px; /* ajustez selon la taille souhaitée */
-}
-
-.nav-links a {
-  color: white;
-  margin-left: 20px;
-  text-decoration: none;
+.progress-step {
+  padding: 0.5rem 1rem;
+  border: 2px solid #ccc;
+  border-radius: 20px;
+  background-color: #eee;
+  color: #555;
   font-weight: bold;
+  transition: all 0.3s ease-in-out;
 }
 
-.nav-links a:hover {
-  text-decoration: underline;
+.progress-step.active {
+  background-color: #66FF66;
+  border-color: #4CAF50;
+  color: white;
+  box-shadow: 0 0 10px #4CAF50;
 }
-
 
 .dashboard-layout {
   display: flex;
-  height: calc(100vh - 50px); /* ajusté à la nouvelle hauteur de la topbar */
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
 }
 
-.sidebar {
-  width: 250px;
-  padding: 1rem;
-  background-color: #ffffff;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+/*Bouton de fin de tour*/
+.center-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.center-button button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.center-button button:hover {
+  background-color: #45a049;
+}
+
+
+
+/* styles/Gauge.css */
+.gauge-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  overflow-y: auto;
+  align-items: center;
+  width: 180px;
 }
 
-.gauge {
-  background: #f0f0f0;
-  border-radius: 8px;
-  padding: 0.75rem;
-  text-align: center;
-  font-size: 0.9rem;
-  flex-shrink: 0;
+.gauge-icon {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 0.5rem;
 }
 
-.gauge-container {
+.gauge-label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.gauge-value-wrapper {
   position: relative;
-  height: 80px;
-  margin-bottom: 0.3rem;
+  height: 40px;
+  margin: 1rem 0;
 }
 
-.gauge-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.gauge-overlay {
+.gauge-halo {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: rgba(0, 150, 255, 0.3);
-  pointer-events: none;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 40px;
+  border-radius: 8px;
+  z-index: 0;
 }
 
-input[type="range"] {
-  width: 100%;
-}
-
-
-.main-panel {
-  flex: 1;
-  padding: 2rem;
-  overflow-y: auto;
-}
-
-.main-panel h2 {
-  margin-top: 0;
+.gauge-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  position: relative;
+  z-index: 1;
   text-align: center;
 }
 
-/* Cartes de souhaits */
-.wishes-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.wish-card {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  width: 280px;
-  padding: 1rem;
-  text-align: left;
-  transition: transform 0.2s, opacity 0.2s;
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.wish-card:hover {
-  transform: translateY(-4px);
-}
-
-.wish-card.selected {
-  border-color: #3498db;
-  background-color: #ecf6fd;
-}
-
-.wish-card.disabled {
-  opacity: 0.4;
-  pointer-events: none;
-}
-
-.image-placeholder {
-  height: 120px;
-  background-color: #e0e0e0;
-  margin-bottom: 1rem;
-  border-radius: 8px;
+.gauge-controls {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #777;
-  font-style: italic;
+  gap: 0.25rem;
 }
 
-.wish-card.priority {
-  border: 2px solid green;
-  background-color: #e7ffe7;
+.gauge-controls select,
+.gauge-controls button {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+}
+.flash {
+  animation: flashPulse 0.8s ease-in-out;
 }
 
-.priority-label {
-  color: green;
-  font-weight: bold;
+@keyframes flashPulse {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
 }
 
 
-.priority-checkbox {
-  margin-top: 0.5em;
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  font-weight: bold;
-}
 
-.validate-container {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.validate-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 8px;
-  border: none;
-}
-
-.validate-button.active {
-  background-color: #2ecc71;
-  color: white;
-}
-
-.validate-button.disabled {
-  background-color: #ccc;
-  color: #666;
-  cursor: not-allowed;
-}
-
-.error-popup {
-  background-color: #f8d7da;
-  color: #842029;
-  border: 1px solid #f5c2c7;
-  border-radius: 8px;
-  padding: 10px 20px;
-  margin: 16px auto;
-  max-width: 400px;
-  text-align: center;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.success-popup {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  border: 1px solid #badbcc;
-  border-radius: 8px;
-  padding: 12px 20px;
-  margin: 16px auto;
-  max-width: 400px;
-  text-align: center;
-  font-weight: bold;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
