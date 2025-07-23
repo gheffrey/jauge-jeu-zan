@@ -1,4 +1,4 @@
-/* Barre de progression à étapes */
+/* === Barre de progression === */
 .progress-bar-container {
   display: flex;
   justify-content: center;
@@ -23,6 +23,7 @@
   box-shadow: 0 0 10px #4CAF50;
 }
 
+/* === Disposition des jauges === */
 .dashboard-layout {
   display: flex;
   justify-content: center;
@@ -30,7 +31,7 @@
   min-height: 80vh;
 }
 
-/*Bouton de fin de tour*/
+/* === Bouton central === */
 .center-button {
   display: flex;
   justify-content: center;
@@ -53,9 +54,7 @@
   background-color: #45a049;
 }
 
-
-
-/* styles/Gauge.css */
+/* === Jauge === */
 .gauge-container {
   display: flex;
   flex-direction: column;
@@ -111,6 +110,8 @@
   padding: 0.3rem 0.5rem;
   font-size: 0.9rem;
 }
+
+/* === Animations jauges === */
 .flash {
   animation: flashPulse 0.8s ease-in-out;
 }
@@ -122,5 +123,137 @@
   100% { transform: scale(1); }
 }
 
+.gauge-warning {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #d9534f;
+  background-color: #fff0f0;
+  border: 1px solid #d9534f;
+  padding: 8px;
+  border-radius: 6px;
+  animation: blink 1.2s linear infinite;
+}
 
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
 
+/* === Modals avec transitions === */
+.ReactModal__Overlay {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+  opacity: 1;
+}
+
+.ReactModal__Overlay--before-close {
+  opacity: 0;
+}
+
+.modal {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: auto;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === Résumé de fin de jeu === */
+.endgame-summary {
+  margin-top: 2rem;
+  padding: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.endgame-summary h2 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.endgame-summary ul {
+  list-style: none;
+  padding: 0;
+}
+
+.endgame-summary li {
+  margin: 0.5rem 0;
+  font-weight: bold;
+}
+
+/* === Badge triplet === */
+.triplet-badge {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* === Responsive Design === */
+@media (max-width: 768px) {
+  .dashboard-layout {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .gauge-container {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .progress-bar-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-step {
+    width: 90%;
+    text-align: center;
+  }
+
+  .center-button button {
+    width: 90%;
+    font-size: 1rem;
+  }
+
+  .modal {
+    width: 90% !important;
+    padding: 1rem;
+  }
+
+  .endgame-summary {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .triplet-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+  }
+}

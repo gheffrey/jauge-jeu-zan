@@ -1,12 +1,13 @@
-// src/App.js
+// src/App.js 
 import './App.css';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Gauge from './components/Gauge';
 import ModalStep from './components/ModalStep';
 import TurnSummaryModal from './components/TurnSummaryModal';
+import EndGameSummary from './components/EndGameSummary';
 import { computeGaugeVariations } from './logic/evaluateTurn';
-import { countWinningTriplets } from './logic/evaluateTriplets';
+import { countWinningTriplets, evaluateEachTriplet } from './logic/evaluateTriplets';
 
 function App() {
   const [wellbeing, setWellbeing] = useState(0);
@@ -16,9 +17,12 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [showSummaryModal, setShowSummaryModal] = useState(false);
 
-  const [currentStep, setCurrentStep] = useState(0); // 🔁 Tour actuel
+  const [currentStep, setCurrentStep] = useState(0);
   const [lastTurnSummary, setLastTurnSummary] = useState(null);
-  const [history, setHistory] = useState([]); // Pour stocker tous les tours
+  const [history, setHistory] = useState([]);
+
+  const [showFinalSummary, setShowFinalSummary] = useState(false);
+  const startTimeRef = useRef(Date.now());
 
   const [formData, setFormData] = useState({
     etale: '',
@@ -39,21 +43,24 @@ function App() {
   const handleModalSubmit = () => {
     const variations = computeGaugeVariations(formData);
     const tripletCount = countWinningTriplets(formData.triplets || []);
+    const evaluatedTriplets = evaluateEachTriplet(formData.triplets || []);
 
     const summary = {
+      tour: currentStep + 1,
       wellbeing: variations.wellbeing,
       biodiversity: variations.biodiversity,
       landUse: variations.landUse,
-      triplets: tripletCount,
-      tour: currentStep + 1,
+      finalWellbeing: wellbeing + variations.wellbeing,
+      finalBiodiversity: biodiversity + variations.biodiversity,
+      finalLandUse: landUse + variations.landUse,
+      time: Date.now() - startTimeRef.current,
+      triplets: evaluatedTriplets
     };
 
-    // Appliquer les variations aux jauges
     setWellbeing(prev => Math.min(100, Math.max(0, prev + variations.wellbeing)));
     setBiodiversity(prev => Math.min(100, Math.max(0, prev + variations.biodiversity)));
     setLandUse(prev => Math.min(100, Math.max(0, prev + variations.landUse)));
 
-    // Afficher résumé + stocker l’historique
     setLastTurnSummary(summary);
     setHistory(prev => [...prev, summary]);
     setShowSummaryModal(true);
@@ -62,7 +69,10 @@ function App() {
 
   const handleSummaryClose = () => {
     setShowSummaryModal(false);
-    if (currentStep < 3) {
+
+    if (currentStep === 3) {
+      setShowFinalSummary(true);
+    } else {
       setCurrentStep(prev => prev + 1);
     }
   };
@@ -70,7 +80,6 @@ function App() {
   return (
     <Router>
       <div className="App">
-        {/* ✅ Barre de progression */}
         <div className="progress-bar-container">
           {[0, 1, 2, 3].map((step) => (
             <div
@@ -82,7 +91,6 @@ function App() {
           ))}
         </div>
 
-        {/* ✅ Jauges */}
         <div className="dashboard-layout">
           <Gauge
             src="/wellbeing.png"
@@ -100,32 +108,24 @@ function App() {
           />
           <Gauge
             src="/landuse.png"
-            alt="Artificialisation"
+            alt="artificialisation"
             label="Artificialisation"
             value={landUse}
             onChange={setLandUse}
           />
         </div>
 
-        {/* ✅ Bouton de fin de tour */}
-        {currentStep < 4 ? (
+        {currentStep < 4 && !showFinalSummary ? (
           <div className="center-button">
-            <button onClick={() => setShowModal(true)}>Fin du tour</button>
+            <button onClick={() => {
+              setShowModal(true);
+              startTimeRef.current = Date.now();
+            }}>Fin du tour</button>
           </div>
         ) : (
-          <div className="final-summary">
-            <h2>Résumé final</h2>
-            <ul>
-              {history.map((tour, index) => (
-                <li key={index}>
-                  <strong>Tour {tour.tour}</strong> — Bien-être : {tour.wellbeing}, Biodiversité : {tour.biodiversity}, Artificialisation : {tour.landUse}, Triplets gagnants : {tour.triplets}
-                </li>
-              ))}
-            </ul>
-          </div>
+          showFinalSummary && <EndGameSummary history={history} />
         )}
 
-        {/* ✅ Modal de formulaire */}
         <ModalStep
           isOpen={showModal}
           onClose={() => setShowModal(false)}
@@ -134,7 +134,6 @@ function App() {
           onSubmit={handleModalSubmit}
         />
 
-        {/* ✅ Modal résumé de tour */}
         <TurnSummaryModal
           isOpen={showSummaryModal}
           onClose={handleSummaryClose}

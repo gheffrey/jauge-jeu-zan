@@ -1,18 +1,35 @@
 import React from 'react';
 
+const CRITICAL_MESSAGES = {
+  'Bien-être': '⚠️ Le cadre de vie est très dégradé ! Améliorez l’aménagement ou les services.',
+  'Biodiversité': '⚠️ La biodiversité est gravement menacée ! Renaturez, plantez mieux ou développez de nouveaux parcs.',
+  'Artificialisation': '⚠️ Le sol est trop artificialisé ! Réduisez l’étalement ou compensez.',
+};
+
 function getColor(value) {
-  if (value <= 20) return '#8B0000';      // rouge foncé
-  if (value <= 40) return '#CC3300';      // rouge-orangée
-  if (value <= 60) return '#FF9900';      // orange clair
-  if (value <= 80) return '#99CC33';      // vert olive
-  return '#66FF66';                       // vert clair
+  if (value <= 20) return '#8B0000';
+  if (value <= 40) return '#CC3300';
+  if (value <= 60) return '#FF9900';
+  if (value <= 80) return '#99CC33';
+  return '#66FF66';
 }
 
-
-  const FLASH_THRESHOLD = 10;
+const FLASH_THRESHOLD = 10;
 
 export default function Gauge({ src, alt, label, value, onChange }) {
   const [selectValue, setSelectValue] = React.useState(0);
+  const [flash, setFlash] = React.useState(false);
+  const prevValueRef = React.useRef(value);
+
+  // Détection variation forte
+  React.useEffect(() => {
+    const delta = Math.abs(value - prevValueRef.current);
+    if (delta >= FLASH_THRESHOLD) {
+      setFlash(true);
+      setTimeout(() => setFlash(false), 800);
+    }
+    prevValueRef.current = value;
+  }, [value]);
 
   const handlePlus = () => {
     onChange(Math.min(100, value + parseInt(selectValue)));
@@ -23,25 +40,15 @@ export default function Gauge({ src, alt, label, value, onChange }) {
   };
 
   const color = getColor(value);
-const [flash, setFlash] = React.useState(false);
-const prevValueRef = React.useRef(value);
-
-React.useEffect(() => {
-  const delta = Math.abs(value - prevValueRef.current);
-  if (delta >= FLASH_THRESHOLD) {
-    setFlash(true);
-    setTimeout(() => setFlash(false), 800);
-  }
-  prevValueRef.current = value;
-}, [value]);
-
+  const isCritical = value <= 20;
+  const criticalMessage = isCritical ? CRITICAL_MESSAGES[label] : null;
 
   return (
     <div className="gauge-container">
       <img src={src} alt={alt} className="gauge-icon" />
       <div className="gauge-label">{label}</div>
 
-<div className={`gauge-value-wrapper ${flash ? 'flash' : ''}`}>
+      <div className={`gauge-value-wrapper ${flash ? 'flash' : ''}`}>
         <div
           className="gauge-halo"
           style={{
@@ -82,6 +89,21 @@ React.useEffect(() => {
         <button onClick={handlePlus}>+</button>
         <button onClick={handleMinus}>−</button>
       </div>
+
+      {criticalMessage && (
+        <div className="gauge-warning" style={{
+          color: '#B22222',
+          marginTop: '10px',
+          fontWeight: 'bold',
+          fontSize: '0.9rem',
+          backgroundColor: '#ffe6e6',
+          padding: '8px',
+          borderRadius: '6px',
+          border: '1px solid #cc0000',
+        }}>
+          {criticalMessage}
+        </div>
+      )}
     </div>
   );
 }

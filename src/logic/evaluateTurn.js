@@ -41,9 +41,11 @@ export function computeGaugeVariations(formData) {
     biodiversity -= 3;
   }
 
-  // Bonus triplets gagnants
-  const tripletBonus = countWinningTriplets(formData.triplets || []) * 5;
-  biodiversity += tripletBonus;
+  /// 🎁 Bonus triplets gagnants : +5 bio et +5 bien-être par triplet
+  const tripletCount = countWinningTriplets(formData.triplets || []);
+  biodiversity += tripletCount * 5;
+    wellbeing += tripletCount * 5;
+
 
   return {
     wellbeing,
